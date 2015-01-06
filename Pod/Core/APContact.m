@@ -11,6 +11,10 @@
 #import "APAddress.h"
 #import "APSocialProfile.h"
 
+@interface APContact ()
+@property (nonatomic, strong) NSData *vCardData;
+@end
+
 @implementation APContact
 
 #pragma mark - life cycle
@@ -20,6 +24,12 @@
     self = [super init];
     if (self)
     {
+        ABRecordRef people[1];
+        people[0] = recordRef;
+        CFArrayRef peopleArray = CFArrayCreate(NULL, (void *)people, 1, &kCFTypeArrayCallBacks);
+        NSData *vCardData = CFBridgingRelease(ABPersonCreateVCardRepresentationWithPeople(peopleArray));
+        self.vCardData = vCardData;
+
         _fieldMask = fieldMask;
         if (fieldMask & APContactFieldFirstName)
         {
