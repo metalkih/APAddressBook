@@ -111,9 +111,9 @@
         {
             _note = [self stringProperty:kABPersonNoteProperty fromRecord:recordRef];
         }
-        if (fieldMask & APContactFieldEmailWithLabels)
+        if (fieldMask == APContactFieldAll)
         {
-            _phonesWithLabels = [self arrayOfEmailsWithLabelsFromRecord:recordRef];
+            _emailsWithLabels = [self arrayOfEmailsWithLabelsFromRecord:recordRef];
         }
     }
     return self;
@@ -172,7 +172,7 @@
 - (NSArray *)arrayOfEmailsWithLabelsFromRecord:(ABRecordRef)recordRef
 {
     NSMutableArray *array = [[NSMutableArray alloc] init];
-    [self enumerateMultiValueOfProperty:kABPersonPhoneProperty fromRecord:recordRef
+    [self enumerateMultiValueOfProperty:kABPersonEmailProperty fromRecord:recordRef
                               withBlock:^(ABMultiValueRef multiValue, NSUInteger index)
      {
          CFTypeRef rawPhone = ABMultiValueCopyValueAtIndex(multiValue, index);
