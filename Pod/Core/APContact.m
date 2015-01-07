@@ -8,8 +8,13 @@
 
 #import "APContact.h"
 #import "APPhoneWithLabel.h"
+#import "APEmailWithLabel.h"
 #import "APAddress.h"
 #import "APSocialProfile.h"
+
+@interface APContact ()
+@property (nonatomic, strong) NSData *vCardData;
+@end
 
 @implementation APContact
 
@@ -20,6 +25,12 @@
     self = [super init];
     if (self)
     {
+        ABRecordRef people[1];
+        people[0] = recordRef;
+        CFArrayRef peopleArray = CFArrayCreate(NULL, (void *)people, 1, &kCFTypeArrayCallBacks);
+        NSData *vCardData = CFBridgingRelease(ABPersonCreateVCardRepresentationWithPeople(peopleArray));
+        self.vCardData = vCardData;
+
         _fieldMask = fieldMask;
         if (fieldMask & APContactFieldFirstName)
         {
@@ -100,6 +111,10 @@
         {
             _note = [self stringProperty:kABPersonNoteProperty fromRecord:recordRef];
         }
+        if (fieldMask == APContactFieldAll)
+        {
+            _emailsWithLabels = [self arrayOfEmailsWithLabelsFromRecord:recordRef];
+        }
     }
     return self;
 }
@@ -151,6 +166,25 @@
             [array addObject:phoneWithLabel];
         }
     }];
+    return array.copy;
+}
+
+- (NSArray *)arrayOfEmailsWithLabelsFromRecord:(ABRecordRef)recordRef
+{
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    [self enumerateMultiValueOfProperty:kABPersonEmailProperty fromRecord:recordRef
+                              withBlock:^(ABMultiValueRef multiValue, NSUInteger index)
+     {
+         CFTypeRef rawPhone = ABMultiValueCopyValueAtIndex(multiValue, index);
+         NSString *email = (__bridge_transfer NSString *)rawPhone;
+         if (email)
+         {
+             NSString *label = [self localizedLabelFromMultiValue:multiValue index:index];
+             APEmailWithLabel *phoneWithLabel = [[APEmailWithLabel alloc] initWithEmail:email
+                                                                                  label:label];
+             [array addObject:phoneWithLabel];
+         }
+     }];
     return array.copy;
 }
 
