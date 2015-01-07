@@ -74,14 +74,7 @@
         }
         if (fieldMask & APContactFieldAddresses)
         {
-            NSMutableArray *addresses = [[NSMutableArray alloc] init];
-            NSArray *array = [self arrayProperty:kABPersonAddressProperty fromRecord:recordRef];
-            for (NSDictionary *dictionary in array)
-            {
-                APAddress *address = [[APAddress alloc] initWithAddressDictionary:dictionary];
-                [addresses addObject:address];
-            }
-            _addresses = addresses.copy;
+            _addresses = [self arrayOfAddressWithLabelsFromRecord:recordRef];
         }
         if (fieldMask & APContactFieldRecordID)
         {
@@ -183,6 +176,24 @@
              APEmailWithLabel *phoneWithLabel = [[APEmailWithLabel alloc] initWithEmail:email
                                                                                   label:label];
              [array addObject:phoneWithLabel];
+         }
+     }];
+    return array.copy;
+}
+
+- (NSArray *)arrayOfAddressWithLabelsFromRecord:(ABRecordRef)recordRef
+{
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    [self enumerateMultiValueOfProperty:kABPersonAddressProperty fromRecord:recordRef
+                              withBlock:^(ABMultiValueRef multiValue, NSUInteger index)
+     {
+         CFTypeRef rawAddress = ABMultiValueCopyValueAtIndex(multiValue, index);
+         NSDictionary *addressDic = (__bridge_transfer NSDictionary *)rawAddress;
+         if (addressDic)
+         {
+             NSString *label = [self localizedLabelFromMultiValue:multiValue index:index];
+             APAddress *address = [[APAddress alloc] initWithAddressDictionary:addressDic label:label];
+             [array addObject:address];
          }
      }];
     return array.copy;

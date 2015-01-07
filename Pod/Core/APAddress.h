@@ -10,6 +10,7 @@
 
 @interface APAddress : NSObject
 
+@property (nonatomic, readonly) NSString *label;
 @property (nonatomic, readonly) NSString *street;
 @property (nonatomic, readonly) NSString *city;
 @property (nonatomic, readonly) NSString *state;
@@ -17,6 +18,5 @@
 @property (nonatomic, readonly) NSString *country;
 @property (nonatomic, readonly) NSString *countryCode;
 
-- (id)initWithAddressDictionary:(NSDictionary *)dictionary;
-
+- (id)initWithAddressDictionary:(NSDictionary *)dictionary label:(NSString *)label;
 @end

@@ -11,11 +11,12 @@
 
 @implementation APAddress
 
-- (id)initWithAddressDictionary:(NSDictionary *)dictionary
+- (id)initWithAddressDictionary:(NSDictionary *)dictionary label:(NSString *)label
 {
     self = [super init];
     if (self)
     {
+        _label = label;
         _street = dictionary[(__bridge NSString *)kABPersonAddressStreetKey];
         _city = dictionary[(__bridge NSString *)kABPersonAddressCityKey];
         _state = dictionary[(__bridge NSString *)kABPersonAddressStateKey];
