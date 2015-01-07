@@ -8,6 +8,7 @@
 
 #import "APContact.h"
 #import "APPhoneWithLabel.h"
+#import "APEmailWithLabel.h"
 #import "APAddress.h"
 #import "APSocialProfile.h"
 
@@ -110,6 +111,10 @@
         {
             _note = [self stringProperty:kABPersonNoteProperty fromRecord:recordRef];
         }
+        if (fieldMask & APContactFieldEmailWithLabels)
+        {
+            _phonesWithLabels = [self arrayOfEmailsWithLabelsFromRecord:recordRef];
+        }
     }
     return self;
 }
@@ -161,6 +166,25 @@
             [array addObject:phoneWithLabel];
         }
     }];
+    return array.copy;
+}
+
+- (NSArray *)arrayOfEmailsWithLabelsFromRecord:(ABRecordRef)recordRef
+{
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    [self enumerateMultiValueOfProperty:kABPersonPhoneProperty fromRecord:recordRef
+                              withBlock:^(ABMultiValueRef multiValue, NSUInteger index)
+     {
+         CFTypeRef rawPhone = ABMultiValueCopyValueAtIndex(multiValue, index);
+         NSString *email = (__bridge_transfer NSString *)rawPhone;
+         if (email)
+         {
+             NSString *label = [self localizedLabelFromMultiValue:multiValue index:index];
+             APEmailWithLabel *phoneWithLabel = [[APEmailWithLabel alloc] initWithEmail:email
+                                                                                  label:label];
+             [array addObject:phoneWithLabel];
+         }
+     }];
     return array.copy;
 }
 
