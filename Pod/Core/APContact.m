@@ -11,6 +11,7 @@
 #import "APEmailWithLabel.h"
 #import "APAddress.h"
 #import "APSocialProfile.h"
+#import "APURLWithLabel.h"
 
 @interface APContact ()
 @property (nonatomic, strong) NSData *vCardData;
@@ -107,6 +108,7 @@
         if (fieldMask == APContactFieldAll)
         {
             _emailsWithLabels = [self arrayOfEmailsWithLabelsFromRecord:recordRef];
+            _urlWithLabels = [self arrayOfURLWithLabelsFromRecord:recordRef];
         }
     }
     return self;
@@ -194,6 +196,24 @@
              NSString *label = [self localizedLabelFromMultiValue:multiValue index:index];
              APAddress *address = [[APAddress alloc] initWithAddressDictionary:addressDic label:label];
              [array addObject:address];
+         }
+     }];
+    return array.copy;
+}
+
+- (NSArray *)arrayOfURLWithLabelsFromRecord:(ABRecordRef)recordRef
+{
+    NSMutableArray *array = [[NSMutableArray alloc] init];
+    [self enumerateMultiValueOfProperty:kABPersonURLProperty fromRecord:recordRef
+                              withBlock:^(ABMultiValueRef multiValue, NSUInteger index)
+     {
+         CFTypeRef rawObject = ABMultiValueCopyValueAtIndex(multiValue, index);
+         NSString *object = (__bridge_transfer NSString *)rawObject;
+         if (object)
+         {
+             NSString *label = [self localizedLabelFromMultiValue:multiValue index:index];
+             APURLWithLabel *url = [[APURLWithLabel alloc] initWithURL:object label:label];
+             [array addObject:url];
          }
      }];
     return array.copy;

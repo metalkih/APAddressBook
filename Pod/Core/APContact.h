@@ -31,6 +31,7 @@
 @property (nonatomic, readonly) NSArray *socialProfiles;
 @property (nonatomic, readonly) NSString *note;
 @property (nonatomic, readonly) NSArray *emailsWithLabels;
+@property (nonatomic, readonly) NSArray *urlWithLabels;
 @property (nonatomic, readonly) NSData *vCardData;
 
 - (id)initWithRecordRef:(ABRecordRef)recordRef fieldMask:(APContactField)fieldMask;
