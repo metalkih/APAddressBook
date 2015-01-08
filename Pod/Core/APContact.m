@@ -11,6 +11,7 @@
 #import "APEmailWithLabel.h"
 #import "APAddress.h"
 #import "APSocialProfile.h"
+#import "APInstantMessages.h"
 #import "APURLWithLabel.h"
 
 @interface APContact ()
@@ -107,8 +108,21 @@
         }
         if (fieldMask == APContactFieldAll)
         {
+            _birthDay = [self dateProperty:kABPersonBirthdayProperty fromRecord:recordRef];
+            
             _emailsWithLabels = [self arrayOfEmailsWithLabelsFromRecord:recordRef];
             _urlWithLabels = [self arrayOfURLWithLabelsFromRecord:recordRef];
+
+            //Instant Message
+            NSMutableArray *instantMessages = [[NSMutableArray alloc] init];
+            NSArray *array = [self arrayProperty:kABPersonInstantMessageProperty fromRecord:recordRef];
+            for (NSDictionary *dictionary in array)
+            {
+                APInstantMessages *profile = [[APInstantMessages alloc] initWithInstantDictionary:dictionary];
+                [instantMessages addObject:profile];
+            }
+            
+            _instantMessages = instantMessages;
         }
     }
     return self;
