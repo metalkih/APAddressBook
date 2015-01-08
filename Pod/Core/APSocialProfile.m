@@ -11,6 +11,7 @@
 
 @interface APSocialProfile ()
 @property (nonatomic, readwrite) APSocialNetworkType socialNetwork;
+@property (nonatomic, readwrite) NSString *service;
 @property (nonatomic, readwrite) NSString *username;
 @property (nonatomic, readwrite) NSString *userIdentifier;
 @property (nonatomic, readwrite) NSURL *url;
@@ -29,6 +30,7 @@
         NSString *usernameKey = (__bridge_transfer NSString *)kABPersonSocialProfileUsernameKey;
         NSString *userIdKey = (__bridge_transfer NSString *)kABPersonSocialProfileUserIdentifierKey;
         NSString *serviceKey = (__bridge_transfer NSString *)kABPersonSocialProfileServiceKey;
+        _service = dictionary[serviceKey];
         _url = [NSURL URLWithString:dictionary[urlKey]];
         _username = dictionary[usernameKey];
         _userIdentifier = dictionary[userIdKey];

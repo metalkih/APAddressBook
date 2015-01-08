@@ -19,6 +19,7 @@ typedef NS_ENUM(NSUInteger, APSocialNetworkType)
 @interface APSocialProfile : NSObject
 
 @property (nonatomic, readonly) APSocialNetworkType socialNetwork;
+@property (nonatomic, readonly) NSString *service;
 @property (nonatomic, readonly) NSString *username;
 @property (nonatomic, readonly) NSString *userIdentifier;
 @property (nonatomic, readonly) NSURL *url;
