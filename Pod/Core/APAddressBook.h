@@ -12,7 +12,7 @@
 @class APContact;
 
 @interface APAddressBook : NSObject
-
+@property (nonatomic, readonly) ABAddressBookRef addressBook;
 @property (nonatomic, assign) APContactField fieldsMask;
 @property (nonatomic, copy) APContactFilterBlock filterBlock;
 @property (nonatomic, strong) NSArray *sortDescriptors;

@@ -14,7 +14,7 @@ void APAddressBookExternalChangeCallback(ABAddressBookRef addressBookRef, CFDict
                                          void *context);
 
 @interface APAddressBook ()
-@property (nonatomic, readonly) ABAddressBookRef addressBook;
+//@property (nonatomic, readonly) ABAddressBookRef addressBook;
 @property (nonatomic, readonly) dispatch_queue_t localQueue;
 @property (nonatomic, copy) void (^changeCallback)();
 @end
