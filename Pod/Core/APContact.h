@@ -35,6 +35,7 @@
 @property (nonatomic, readonly) NSArray *instantMessages;
 @property (nonatomic, readonly) NSData *vCardData;
 @property (nonatomic, readonly) NSDate *birthDay;
+@property (nonatomic, strong) NSString *index;
 
 - (id)initWithRecordRef:(ABRecordRef)recordRef fieldMask:(APContactField)fieldMask;
 
