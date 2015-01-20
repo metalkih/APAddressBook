@@ -94,6 +94,7 @@ void APAddressBookExternalChangeCallback(ABAddressBookRef addressBookRef, CFDict
 	        NSError *error = nil;
             if (granted)
             {
+                ABAddressBookRevert(self.addressBook);
                 CFArrayRef peopleArrayRef = ABAddressBookCopyArrayOfAllPeople(self.addressBook);
                 NSUInteger contactCount = (NSUInteger)CFArrayGetCount(peopleArrayRef);
                 NSMutableArray *contacts = [[NSMutableArray alloc] init];
